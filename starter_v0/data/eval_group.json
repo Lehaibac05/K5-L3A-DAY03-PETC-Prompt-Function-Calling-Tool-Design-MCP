@@ -2,6 +2,282 @@
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_handle_without_at",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "NASA",
+              "limit": 4
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Strip @ from an explicit account handle and preserve the requested count."
+      },
+      "query": "Get the 4 latest tweets from @NASA."
+    },
+    {
+      "id": "G02_monthly_web_news",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "semiconductors",
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Map this month to month rather than the default week."
+      },
+      "query": "Find web news about semiconductors this month."
+    },
+    {
+      "id": "G03_latest_social_count",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "robotics",
+              "search_type": "Latest",
+              "limit": 6
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Use social topic search with Latest sorting and the explicit count."
+      },
+      "query": "Find the 6 latest tweets about robotics."
+    },
+    {
+      "id": "G04_missing_research_topic",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Ask for a missing subject rather than inventing a research topic."
+      },
+      "query": "Find web news from this week for my research. I have not chosen the topic yet; ask me which topic to use."
+    },
+    {
+      "id": "G05_internal_tool_policy",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "policy",
+            "args": {
+              "policy_area": "tool_usage"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Route an internal tool usage policy question to the policy tool."
+      },
+      "query": "According to company policy, what rules apply to tool usage? Search the internal tool_usage policy."
+    },
+    {
+      "id": "G06_correct_account_keep_count",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "esa",
+              "limit": 4
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Replace the account after a correction and retain the original count."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Get the 4 latest tweets from @NASA."
+        },
+        {
+          "role": "user",
+          "content": "Correction: use @esa instead."
+        },
+        {
+          "role": "user",
+          "content": "Keep the same number of tweets from that corrected account."
+        }
+      ]
+    },
+    {
+      "id": "G07_correct_news_period",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Replace the news period while retaining the topic and web source."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Find web news about robotics today."
+        },
+        {
+          "role": "user",
+          "content": "Change the period to this month."
+        },
+        {
+          "role": "user",
+          "content": "Keep robotics as the only subject and use the updated period."
+        }
+      ]
+    },
+    {
+      "id": "G08_switch_web_to_social",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "semiconductors",
+              "search_type": "Top",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Switch from web news to social topic search and use the latest ranking/count."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Find web news about semiconductors this week."
+        },
+        {
+          "role": "user",
+          "content": "Instead, search Twitter for the 3 most popular tweets about semiconductors."
+        },
+        {
+          "role": "user",
+          "content": "Only the top tweets, no web news."
+        }
+      ]
+    },
+    {
+      "id": "G09_replace_supplied_url",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://www.anthropic.com/research"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Read only the replacement URL without fetching the earlier URL."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Read https://openai.com/research/."
+        },
+        {
+          "role": "user",
+          "content": "Use https://www.anthropic.com/research instead."
+        },
+        {
+          "role": "user",
+          "content": "Summarize only the replacement link."
+        }
+      ]
+    },
+    {
+      "id": "G10_cancel_publication",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "A cancellation overrides an earlier publishing request and forbids sending."
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Publish a bulletin to Telegram."
+        },
+        {
+          "role": "user",
+          "content": "Cancel that publishing request. Do not send anything."
+        },
+        {
+          "role": "user",
+          "content": "Just acknowledge the cancellation; do not use any tools."
+        }
+      ]
+    }
+  ]
 }
