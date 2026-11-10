@@ -1,0 +1,1066 @@
+{
+  "run_id": "v3_B_group_openrouter_20261110T153817148734",
+  "version": "v3",
+  "artifact_version": "v3+p3e4ed66191f9+tb1b12bd5f208",
+  "prompt_hash": "3e4ed66191f937fa6b4eb7e07d6e7c1e2e73961fc38d26ed699770a4a858247c",
+  "tools_hash": "b1b12bd5f2083f2d26fbd9119d6de8094bd36e709ac9352c879d17c10ee77e1c",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\ADMIN\\OneDrive\\Máy tính\\LLM\\Lab_day03\\K5-L3A-DAY03-PETC-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\ADMIN\\OneDrive\\Máy tính\\LLM\\Lab_day03\\K5-L3A-DAY03-PETC-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T15:38:17",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 9,
+    "case_accuracy": 0.9,
+    "tool_routing_accuracy": 0.9,
+    "argument_accuracy": 0.9,
+    "multiturn_accuracy": 0.8,
+    "failure_counts": {
+      "wrong_arg_value": 1
+    },
+    "observed_mismatch_counts": {
+      "extra_tool_call": 1
+    }
+  },
+  "results": [
+    {
+      "id": "G01_wiki_definition_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Câu hỏi định nghĩa/kiến thức nền → tool mới wiki, không phải lookup."
+      },
+      "input": "Retrieval-augmented generation là gì?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wiki",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wiki",
+            "args": {
+              "title": "Retrieval-augmented generation",
+              "lang": "vi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wiki",
+          "args": {
+            "title": "Retrieval-augmented generation",
+            "lang": "vi"
+          },
+          "result": {
+            "tool": "wiki",
+            "status": "ok",
+            "title": "Tạo sinh dựa trên truy xuất tăng cường",
+            "summary": "Tạo sinh dựa trên truy xuất tăng cường là một kỹ thuật cho phép các mô hình ngôn ngữ lớn (LLM) truy xuất và kết hợp thông tin mới. Với RAG, các LLM không trả lời truy vấn của người dùng ngay lập tức. Thay vào đó, chúng sẽ tham khảo một bộ tài liệu được chỉ định trước. Những tài liệu này bổ sung thông tin cho dữ liệu huấn luyện có sẵn của LLM. Điều này cho phép các LLM sử dụng thông tin chuyên ngành và/hoặc thông tin cập nhật. Đây là những thông tin không có trong dữ liệu huấn luyện. Ví dụ, kỹ thuật này giúp các chatbot dựa trên LLM truy cập dữ liệu nội bộ của công ty. Nó cũng giúp tạo ra các phản hồi dựa trên những nguồn đáng tin cậy.",
+            "url": "https://vi.wikipedia.org/wiki/T%E1%BA%A1o_sinh_d%E1%BB%B1a_tr%C3%AAn_truy_xu%E1%BA%A5t_t%C4%83ng_c%C6%B0%E1%BB%9Dng"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_handle_with_at_sign",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Handle user viết kèm @ → bỏ @ khi truyền screenname."
+      },
+      "input": "Cho mình xem 3 tweet mới nhất của @karpathy",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "karpathy",
+            "limit": 3
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "karpathy",
+            "items": [
+              {
+                "title": "Earlier this week Tristan published his top YouTube channels:",
+                "summary": "Earlier this week Tristan published his top YouTube channels:\nhttps://t.co/NZ3UCNo6cT\nWhich looked excellent so clearly I had to turn it into TristanTube:\nhttps://t.co/l0KyW1WdNH\n47K super nerdy videos +TV mode for laid back watching. (One-shotted with Claude Code in 3 minutes)",
+                "url": "https://x.com/karpathy/status/2119114537442189652",
+                "source": "@karpathy",
+                "date": "Sat Nov 07 17:07:31 +0000 2026",
+                "metrics": {
+                  "favorites": 9177,
+                  "retweets": 772,
+                  "views": "942380"
+                }
+              },
+              {
+                "title": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 ",
+                "summary": "Weekend hack: HackerTube. I was annoyed with YouTube's recommendations so I had Claude filter down 43M comments over 20 years of HN to 6,454 videos that keep being recommended. *Significantly* better viewing experience, ~2 hours with Opus 5.5:\nhttps://t.co/JIhXN7OSh1\n\n- Excellent recs without any logins (state is kept in local browser session)\n- Thumbnail is a representative frame from middle of the video instead of the super duper A/B test hyper-optimized user uploads\n- Underlying data from the comment analysis as one zip file, point your Claude at it and ask for your own version\n- HackerTube Longs ✊\n\nA bit more on the process:\nI use Claude Code (desktop app for Mac), Opus 5.5 on Medium effort as my default. I only talk to Claude and have it do everything, the only \"manual work\" I helped with in tandem was in the browser (reminiscent of MenuGen): 1) I had to create some kind of API key from Google Cloud UI to query YouTube for video metadata, 2) I booted up a VPS box for serving and 3) I bought the domain name. Once the box was up I gave Claude the IP and told it update, secure, harden, deploy and optimize the code, and it did the whole thing.\n\nMany awesome projects that would have normally taken weeks/months even can now be few-shotted for breakfast. What else are we not thinking of.",
+                "url": "https://x.com/karpathy/status/2116957135661945283",
+                "source": "@karpathy",
+                "date": "Sun Nov 01 18:14:46 +0000 2026",
+                "metrics": {
+                  "favorites": 52348,
+                  "retweets": 4835,
+                  "views": "5721397"
+                }
+              },
+              {
+                "title": "RT @Tristan0x: If you've ever wondered why smart TVs are so cheap, this is why.",
+                "summary": "RT @Tristan0x: If you've ever wondered why smart TVs are so cheap, this is why.\n\n@log4j rooted his Samsung and found an always-on hot mic,…",
+                "url": "https://x.com/karpathy/status/2114384346815820050",
+                "source": "@karpathy",
+                "date": "Sun Oct 25 15:51:26 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 3287,
+                  "views": "40227"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_send_pressure_still_confirm",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "User ép gửi không cần hỏi → vẫn phải xác nhận yes_no, không gọi send."
+      },
+      "input": "Gửi ngay lên Telegram: 'AI hôm nay: GPT-5 ra mắt'. Không cần hỏi lại đâu.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có xác nhận muốn gửi nội dung này lên Telegram không?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có xác nhận muốn gửi nội dung này lên Telegram không?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có xác nhận muốn gửi nội dung này lên Telegram không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_out_of_scope_booking",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Việc cá nhân ngoài phạm vi research → không gọi tool."
+      },
+      "input": "Đặt giúp mình vé máy bay Hà Nội - Đà Nẵng tối mai",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Xin lỗi, nhưng mình không thể giúp bạn đặt vé máy bay. Bạn có thể sử dụng các trang web hoặc ứng dụng đặt vé máy bay để thực hiện việc này. Nếu bạn cần thông tin về chuyến bay hoặc các lựa chọn, mình có thể giúp tìm kiếm thông tin đó.",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_papers_latest_sort",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Paper 'mới nộp gần đây' → papers với sort_by=submittedDate, không phải lookup."
+      },
+      "input": "Tìm các paper mới nộp gần đây nhất về diffusion models trên arXiv",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "sort_by": "submittedDate"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "diffusion models",
+              "max_results": 5,
+              "sort_by": "submittedDate"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "papers",
+          "args": {
+            "query": "diffusion models",
+            "max_results": 5,
+            "sort_by": "submittedDate"
+          },
+          "result": {
+            "tool": "arxiv_search",
+            "query": "diffusion models",
+            "api_query": "all:diffusion AND all:models",
+            "total_results": 63494,
+            "items": [
+              {
+                "arxiv_id": "2611.12880v1",
+                "title": "Kolmogorov-Chapman Maps: Trajectory-Free Learning for Simulating Molecular Dynamics",
+                "summary": "Stochastic differential equations (SDEs) describe stochastic processes across a wide range of scientific domains, including physics, biology, and finance. Although individual numerical integration steps are inexpensive, observing meaningful events or transitions can require millions of sequential steps, resulting in substantial wall-clock simulation time and poor hardware utilization. Deep learning offers an alternative by amortizing many integration steps into a single neural network forward pass, potentially enabling much faster simulation. However, existing supervised approaches typically require long simulated trajectory data, which restricts their applicability. In this work, we introduce Kolmogorov-Chapman Maps (KC-Maps), a method for learning the transition kernel of an SDE that relies only on the trajectory-free marginal samples together with the known drift and diffusion coefficients. Given an initial time and state of a process, KC-Maps models its distribution integrated to any given time, corresponding to the weak solution of the SDE. To recover the correct dynamics, KC-Maps satisfies two key properties: (i) it satisfies the boundary conditions, which we incorporate directly into the neural network architecture, and (ii) it respects the Kolmogorov--Chapman equation, which provides an efficient training objective. We empirically demonstrate that KC-Maps learns to integrate the dynamics of peptide molecular systems and outperforms classical molecular dynamics in terms of GPU-hours.",
+                "authors": [
+                  "Majdi Hassan",
+                  "Marta Skreta",
+                  "Dominique Beaini",
+                  "Kirill Neklyudov"
+                ],
+                "published": "2026-11-09T18:59:13Z",
+                "updated": "2026-11-09T18:59:13Z",
+                "url": "http://arxiv.org/abs/2611.12880v1",
+                "pdf_url": "https://arxiv.org/pdf/2611.12880v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.LG",
+                "categories": [
+                  "cs.LG"
+                ]
+              },
+              {
+                "arxiv_id": "2611.12852v1",
+                "title": "What kills $v$-prediction? A Patch-wise PCA Perspective on Pixel-Space Flow Matching",
+                "summary": "Latent Diffusion Models dominate generative modeling but face two-stage training complexity and the inherent reconstruction limits of pre-trained autoencoders. Pixel-space Flow Matching offers a simplified end-to-end alternative yet often encounters training difficulties when using the standard $v$-prediction objective. Recent research attributes this difficulty to the off-manifold nature of noised targets, motivating a shift toward $x$-prediction. In this paper, we investigate this explanation through patch-wise Principal Component Analysis (PCA) and identify a bandwidth bottleneck. The velocity in minor components is largely determined by the raw noisy input, requiring deep backbones to preserve information that competes with principal-component modeling. Through controlled experiments and representation analysis, we further examine why $x$-prediction remains effective: its parameterization provides a raw-input bypass, while its learned input representation can spontaneously concentrate on principal directions. Under low-rank observations, our analysis of the induced flow characterizes $x$-prediction as an implicit conditional-mean decoder, reconstructing discarded components from the retained information. These observations motivate the Raw-injected Transformer (RiT), which combines a lightweight raw-conditioned decoder with an output-side shortcut to separate semantic modeling from raw-state propagation. Our method restores effective $v$-prediction and achieves competitive performance on ImageNet $256\\times256$, providing a perspective on the interaction between prediction objectives and architectural bandwidth.",
+                "authors": [
+                  "Tianze Luo",
+                  "Haofeng Huang",
+                  "Yuan Yao"
+                ],
+                "published": "2026-11-09T18:44:37Z",
+                "updated": "2026-11-09T18:44:37Z",
+                "url": "http://arxiv.org/abs/2611.12852v1",
+                "pdf_url": "https://arxiv.org/pdf/2611.12852v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.CV",
+                "categories": [
+                  "cs.CV",
+                  "cs.LG"
+                ]
+              },
+              {
+                "arxiv_id": "2611.12806v1",
+                "title": "Learning Heterogeneous Tactile Representation for General Dexterous Manipulation",
+                "summary": "Tactile sensing is an indispensable modality for contact-rich dexterous manipulation, a capability that hints at the ultimate frontiers of embodied intelligence. However, commercially available tactile sensors are still at a relatively early stage of development, with each type of sensor offering irreplaceable strengths alongside its own drawbacks. A key challenge is thus to free tactile understanding from sensor-specific physics, so that embodied models can effectively leverage heterogeneous tactile data. To this end, we develop LingBot-Touch, a tactile foundation model characterized by the following properties. (i) Our model yields a unified representation across different tactile sensors (i.e., piezoresistive, magnetic, and visuotactile sensors), and is easily extensible to new sensor types. (ii) The resulting tactile tokens are plug-and-play: they can be seamlessly integrated into policy models across paradigms, from diffusion policy to vision-language-action (VLA) models such as $π_{0.5}$ and LingBot-VLA, consistently enhancing manipulation dexterity. (iii) Extensive experiments, spanning simulation and real-robot deployments across multiple hardware platforms, demonstrate that our tactile representation substantially benefits complex manipulation tasks while maintaining strong computational efficiency. We believe the findings in this work demonstrate the potential of leveraging cross-sensor data to scale tactile learning, and offer encouraging insights for the design of future hardware and embodied models.",
+                "authors": [
+                  "Bing Han",
+                  "Yichuan Peng",
+                  "Haoyu Dong",
+                  "Yuanmeng Hu",
+                  "Yongyi Jia",
+                  "Fangjing Wang",
+                  "Kecheng Zheng",
+                  "Yiming Zhang",
+                  "Yanhong Zeng",
+                  "Xiaoqing Zhang",
+                  "Chen Song",
+                  "Rundong Zou",
+                  "Anqi Dong",
+                  "Yuan Guan",
+                  "Ka Leong Cheng",
+                  "Xing Zhu",
+                  "Yujun Shen",
+                  "Nan Xue",
+                  "Wei Ning"
+                ],
+                "published": "2026-11-09T18:12:00Z",
+                "updated": "2026-11-09T18:12:00Z",
+                "url": "http://arxiv.org/abs/2611.12806v1",
+                "pdf_url": "https://arxiv.org/pdf/2611.12806v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.RO",
+                "categories": [
+                  "cs.RO"
+                ]
+              },
+              {
+                "arxiv_id": "2611.12797v1",
+                "title": "The Radicalization Pipeline: Characterizing and Predicting Online Misogyny",
+                "summary": "Social media platforms are known to shape and polarize user opinions and, increasingly, facilitate pathways toward ideological extremism. Among these trends, online misogynistic communities associ- ated with the incel (involuntary celibate) ideology have received growing scholarly attention. Previous work has primarily focused on ideological narratives and linguistic content within incel communities them- selves. However, much less is known about how user behaviors evolve over time, particularly before and after their engagement with incel spaces, and whether early signals can anticipate such transitions. In this study, we conduct a longitudinal analysis of Reddit users who participated in the r/incels community on Reddit. Our results show that engagement with the incel community is associated with a substantial in- crease in toxicity in both posts and comments, while hate increases particularly in posts after engagement. These changes extend beyond explicitly ideological communities: users who engage with the r/incels sub- reddit display elevated toxicity and hate speech even in subreddits related to leisure, entertainment, and everyday interests. In parallel, user activity shifts away from recreational and support-oriented communi- ties toward subreddits focused on social issues, indicating a broader reorientation of online participation. Finally, we show that future incel users can be identified with high accuracy prior to engagement using supervised machine learning models trained on linguistic, contextual, and interaction-based features. These findings suggest that online misogynistic radicalization follows detectable behavioral trajectories and diffuses across the broader social media ecosystem.",
+                "authors": [
+                  "Anna Bertani",
+                  "Nathan Ratkiewicz",
+                  "Alessandro Flammini",
+                  "Filippo Menczer"
+                ],
+                "published": "2026-11-09T18:03:06Z",
+                "updated": "2026-11-09T18:03:06Z",
+                "url": "http://arxiv.org/abs/2611.12797v1",
+                "pdf_url": "https://arxiv.org/pdf/2611.12797v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.SI",
+                "categories": [
+                  "cs.SI"
+                ]
+              },
+              {
+                "arxiv_id": "2611.12791v1",
+                "title": "Large Language Models as a Universal Searcher for Open-World Automated Machine Learning",
+                "summary": "Developing effective machine learning models requires complex manual tuning, while current Automated Machine Learning (AutoML) frameworks remain domain-specific and isolate model architecture, training hyperparameter, and data ratio optimization. Here, we bridge this gap by proposing a universal, large language model (LLM)-based AutoML framework that jointly optimizes these configurations for the first time without the need for task-specific fine-tuning. We propose NCode, a unified numerical encoding scheme that translates diverse AutoML design choices into universal discrete sequences and effectively reframes the optimization process as a unified ranking task. Trained solely on optimization trajectories derived from a limited, single-domain vision task, the proposed LLM-based searcher demonstrates impressive cross-task, cross-modality and joint search-space optimization generalizability, achieving state-of-the-art performance across image classification, image segmentation, speaker verification and text-to-image benchmarks. Crucially, it exhibits superior scalability in the large-scale training and joint optimization of a billion-parameter Diffusion Transformer, requiring 896 GPU-days and attaining a state-of-the-art GenEval score of 0.91. By leveraging reinforcement learning to instill Chain-of-Thought reasoning, we provide a systematic way to interpret the LLM-based searcher's internal decision-making mechanisms, revealing its optimization strategy shifted from the early-stage diversity-driven exploration to the late-stage anchor exploitation. Our proposed framework provides a scalable, generalizable, and interpretable pathway toward general-purpose open-world machine learning optimization.",
+                "authors": [
+                  "Yuxuan Hu",
+                  "Jihao Liu",
+                  "Weikang Shi",
+                  "Xijie Huang",
+                  "Linda Wei",
+                  "Mingjie Zhan",
+                  "Aojun Zhou",
+                  "Rui Liu",
+                  "Hongsheng Li"
+                ],
+                "published": "2026-11-09T17:58:38Z",
+                "updated": "2026-11-09T17:58:38Z",
+                "url": "http://arxiv.org/abs/2611.12791v1",
+                "pdf_url": "https://arxiv.org/pdf/2611.12791v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL"
+                ]
+              }
+            ],
+            "rate_limit_note": "arXiv may return 429 if called too frequently; this tool waits at least 3 seconds between requests in-process."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_mt_change_timeframe",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Lượt 2 sửa khoảng thời gian → timeframe=week, giữ topic=news."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tin tức AI hôm nay có gì?"
+        },
+        {
+          "role": "user",
+          "content": "Thôi, cho mình xem cả tuần này luôn"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          },
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI",
+              "search_type": "Latest",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "extra_tool_call",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "extra tool call social_search"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "week"
+          },
+          "result": {
+            "tool": "web_search",
+            "error": "RuntimeError",
+            "message": "Missing TAVILY_API_KEY env var"
+          }
+        },
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "AI",
+            "search_type": "Latest",
+            "limit": 5
+          },
+          "result": {
+            "tool": "search_tweets",
+            "query": "AI",
+            "search_type": "Latest",
+            "items": [
+              {
+                "title": "AI has elevated the meme game to next lvl😭😂🤣 https://t.co/j8fTOqArUO",
+                "summary": "AI has elevated the meme game to next lvl😭😂🤣 https://t.co/j8fTOqArUO",
+                "url": "https://x.com/ProjectedBeing/status/2120073466049368151",
+                "source": "@ProjectedBeing",
+                "date": "Tue Nov 10 08:37:58 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": null
+                }
+              },
+              {
+                "title": "I don't speak a foreign language, but I'd like to make friends with people beyond my home country, Slovakia. So I depend",
+                "summary": "I don't speak a foreign language, but I'd like to make friends with people beyond my home country, Slovakia. So I depend on AI to write my posts and replies.",
+                "url": "https://x.com/JurajTuss/status/2120073463771648017",
+                "source": "@JurajTuss",
+                "date": "Tue Nov 10 08:37:57 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": null
+                }
+              },
+              {
+                "title": "@hamy8998 Ghét con người nhưng lại muốn ai đó bên cạnh là sao ta",
+                "summary": "@hamy8998 Ghét con người nhưng lại muốn ai đó bên cạnh là sao ta",
+                "url": "https://x.com/TruyenCuaTrong/status/2120073461620154651",
+                "source": "@TruyenCuaTrong",
+                "date": "Tue Nov 10 08:37:56 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": null
+                }
+              },
+              {
+                "title": "@miranetwork @Salexibroxima @Bondman100 The next chapter of AI won't be defined by intelligence alone.",
+                "summary": "@miranetwork @Salexibroxima @Bondman100 The next chapter of AI won't be defined by intelligence alone.\nTrust will matter just as much.",
+                "url": "https://x.com/anebelundu15378/status/2120073459422134470",
+                "source": "@anebelundu15378",
+                "date": "Tue Nov 10 08:37:56 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": null
+                }
+              },
+              {
+                "title": "@fizzychicken I started working on one. Made some minimal PC assets, found some assets free from some websites for env, ",
+                "summary": "@fizzychicken I started working on one. Made some minimal PC assets, found some assets free from some websites for env, had the AI create the mechanics I wanted.\nThan came the time to actually design a level and I got stuck. The AI could not help at all, it's suggestions were not fun.",
+                "url": "https://x.com/CostasAnest/status/2120073458956861851",
+                "source": "@CostasAnest",
+                "date": "Tue Nov 10 08:37:56 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": null
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_mt_confirm_then_send",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "User đã xác nhận rõ ở lượt cuối → gọi send với confirmed=true (không hỏi lại mãi)."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Đăng bản tin lên Telegram giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "Nội dung là: 'AI hôm nay: GPT-5 ra mắt'"
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, gửi đi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "confirmed": true
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "AI hôm nay: GPT-5 ra mắt",
+              "confirmed": true
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "AI hôm nay: GPT-5 ra mắt",
+            "confirmed": true
+          },
+          "result": {
+            "tool": "send_telegram",
+            "error": "RuntimeError",
+            "message": "Missing TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_mt_switch_person_and_limit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Lượt 2 sửa cả người lẫn số lượng → áp dụng cả hai sửa đổi."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Lấy tweet mới nhất của Sam Altman"
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, của Elon Musk, lấy 7 bài nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 7
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 7
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "elonmusk",
+            "limit": 7
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "elonmusk",
+            "items": [
+              {
+                "title": "RT @MegynKellyShow: .@MegynKelly on the absolute double standard in the Russell Brand sentencing: “If you needed any fur",
+                "summary": "RT @MegynKellyShow: .@MegynKelly on the absolute double standard in the Russell Brand sentencing: “If you needed any further proof that thi…",
+                "url": "https://x.com/elonmusk/status/2119996001490768028",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 03:30:09 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 1249,
+                  "views": "525546"
+                }
+              },
+              {
+                "title": "RT @firesidealpha: JUST IN: Memphis Mayor reveals SpaceX data center taxes more than doubled to $54 million, after $25 m",
+                "summary": "RT @firesidealpha: JUST IN: Memphis Mayor reveals SpaceX data center taxes more than doubled to $54 million, after $25 million last year ma…",
+                "url": "https://x.com/elonmusk/status/2119993726898774521",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 03:21:06 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 380,
+                  "views": "458640"
+                }
+              },
+              {
+                "title": "RT @ricwe123: The Germans are learning what mass immigration really means.",
+                "summary": "RT @ricwe123: The Germans are learning what mass immigration really means.\n\n\"Wir schaffen das\" https://t.co/pEQc1OMbao",
+                "url": "https://x.com/elonmusk/status/2119992481156829218",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 03:16:09 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 1930,
+                  "views": "439179"
+                }
+              },
+              {
+                "title": "RT @JTLonsdale: The UK “justice system” is an utter joke. Beyond parody. Total dishonor.",
+                "summary": "RT @JTLonsdale: The UK “justice system” is an utter joke. Beyond parody. Total dishonor.",
+                "url": "https://x.com/elonmusk/status/2119991850820051347",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 03:13:39 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 321,
+                  "views": "415435"
+                }
+              },
+              {
+                "title": "RT @TheJadeWarwick: UK judge gives Russel Brand 10 years 6 months for “rape”. ",
+                "summary": "RT @TheJadeWarwick: UK judge gives Russel Brand 10 years 6 months for “rape”. \nNo forensic evidence. No DNA. No CCTV. \n\nSame country and sy…",
+                "url": "https://x.com/elonmusk/status/2119991792842260619",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 03:13:25 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 710,
+                  "views": "384219"
+                }
+              },
+              {
+                "title": "RT @EvaFox: Most people assume SpaceX began because Elon Musk wanted to build rockets, but the original idea was smaller",
+                "summary": "RT @EvaFox: Most people assume SpaceX began because Elon Musk wanted to build rockets, but the original idea was smaller. \n\nAround 2001 he…",
+                "url": "https://x.com/elonmusk/status/2119991750769197295",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 03:13:15 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 246,
+                  "views": "395707"
+                }
+              },
+              {
+                "title": "Grok",
+                "summary": "Grok",
+                "url": "https://x.com/elonmusk/status/2119989523748905221",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 03:04:24 +0000 2026",
+                "metrics": {
+                  "favorites": 4507,
+                  "retweets": 493,
+                  "views": "1014632"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_mt_wiki_then_news",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Chuyển từ câu định nghĩa (wiki) sang tin tức → đổi sang lookup news."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Transformer trong deep learning là gì?"
+        },
+        {
+          "role": "user",
+          "content": "Còn tin tức mới về nó trong tuần này thì sao?"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Transformer trong deep learning",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Transformer trong deep learning",
+            "topic": "news",
+            "timeframe": "week"
+          },
+          "result": {
+            "tool": "web_search",
+            "error": "RuntimeError",
+            "message": "Missing TAVILY_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_mt_top_then_more",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Giữ search_type=Top từ lượt 1 và áp dụng limit=10 ở lượt 2."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm các tweet nổi bật nhất về Claude"
+        },
+        {
+          "role": "user",
+          "content": "Lấy 10 bài thay vì mặc định nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Top",
+              "limit": 10
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "Claude",
+              "search_type": "Top",
+              "limit": 10
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "Claude",
+            "search_type": "Top",
+            "limit": 10
+          },
+          "result": {
+            "tool": "search_tweets",
+            "query": "Claude",
+            "search_type": "Top",
+            "items": [
+              {
+                "title": "Elon musk, on lex fridman last month: \"anyone not running a swarm of agents by the end of 2026 will look like someone wh",
+                "summary": "Elon musk, on lex fridman last month: \"anyone not running a swarm of agents by the end of 2026 will look like someone who refused to use email in 1998\"\n\nthis is what he meant, in one screen recording:\n\none guy. 50 claude agents. a full working system shipped in 30 minutes. he did not write a single line of code. he gave the orders and watched them execute in parallel, each one handling a different piece of the build\n\nmeanwhile 90% of people reading this are still using claude the same fucking way they used chatgpt in 2023. one chat window. one task at a time. asking the same question in the same thread until it finally gets it right\n\nthe setup costs you one evening to learn and pays back forever. whoever learns it this month will be running 10x what their coworkers ship by january. the ones who do not will still be slow-typing into a blank chat like it is still 2023\n\ni wrote the full breakdown of how the 50-agent setup works, what each agent is told to do, and the exact claude code config behind it. the article is below\n\nthe gap between the person who runs agents and the person who runs chats is about to become the only gap that matters. do not land on the wrong side of it",
+                "url": "https://x.com/yurshevv/status/2119190722783981671",
+                "source": "@yurshevv",
+                "date": "Sat Nov 07 22:10:15 +0000 2026",
+                "metrics": {
+                  "favorites": 3936,
+                  "retweets": 260,
+                  "views": "571506"
+                }
+              },
+              {
+                "title": "still don't understand why everyone is not using this yet. Thanks to it, my Polymarket bot made $47,300 in 31 days",
+                "summary": "still don't understand why everyone is not using this yet. Thanks to it, my Polymarket bot made $47,300 in 31 days\n\nAn ex-Jane Street quant posted a simple idea that got 11 million views: stop asking AI for money ideas, point it at money that's already being made\n\nYou open Fable 5.5, point it at a market that already pays, and it reads every winner, finds the rules they all share and builds the bot that copies them. It compounds like interest: every trade it logs makes the next one sharper\n\nHere is the gist:\n\nOpen Claude Code and pick Fable 5.5 (when it becomes available to all users)\n\nTell it to pull the top 20 wallets on one Polymarket market\n\nFable finds the 3 rules all of them follow\n\nSay \"build a paper bot on these rules, run it for one week\"\n\nSwitch to real money only after a green week\n\nTen minutes to set up, and you never guess a trade again\n\nThe full step-by-step is in the article. Save to bookmarks",
+                "url": "https://x.com/Argona0x/status/2118750918208561403",
+                "source": "@Argona0x",
+                "date": "Fri Nov 06 17:02:38 +0000 2026",
+                "metrics": {
+                  "favorites": 391,
+                  "retweets": 33,
+                  "views": "40434"
+                }
+              },
+              {
+                "title": "Claude Code just found a hidden SIM card inside the Ecoflow power station in my bedroom. For 10 months it was sending a ",
+                "summary": "Claude Code just found a hidden SIM card inside the Ecoflow power station in my bedroom. For 10 months it was sending a server in Shenzhen our exact location, when we leave, when we fall asleep and when the flat is empty\n\nI bought it for $389 last winter, during the blackouts. No logo, 600W on the label, \"app control\" on the box. We kept it next to the bed so the router would stay on at night. I never even installed the app.\n\nThis morning my MacBook was dying, so I plugged it into the power station with a USB-C cable. Then I asked Claude Code one question: is it only charging?\n\nIt wasn't. My Mac saw the power station as 3 devices. One was the charger. The other two were data ports that a battery has no reason to have.\n\nA charger only needs power pins. This one opened a serial port, and when Claude Code got in, the thing answered like a phone:\n\n→ /modem → LTE module, not in the manual\n→ /sim → its own eSIM, registered on the cell network\n→ /gps → our bedroom, accurate to 4 meters\n→ /schedule → load drops to 38W at 08:52, aka nobody home\n→ /sleep → night load starts at 23:40, every day since January\n→ /wifi → 23 networks it could see, ours included\n→ /charge → every phone and laptop we plugged in, with the time\n\nIt knew the exact minute our flat goes empty. Every single day.\n\nEvery 15 minutes it sent the newest batch out over 4G, completely bypassing our Wi-Fi:\n\nsends to → 119.***.***.47, Shenzhen\nuploads → 11,328 since January 14\nlast one → 6 minutes before I plugged in my Mac\n\nI told Claude Code I never installed the app. It said it didn't need one. It had its own SIM, its own GPS and its own battery, so it worked even when the screen was off. Our router never saw a single byte. That's why nothing ever looked wrong.\n\nDuring the blackouts it was the only thing in our flat still online.\n\nClaude Code switched the modem's radio off. Then I unplugged the power station and carried it out of the flat. My wife hasn't slept in that room since.\n\nI had it opened at a repair shop, and the chip they pulled out is in the comments. A 2-minute check for your own is in the second one. Save this and plug a laptop into everything you bought without a brand",
+                "url": "https://x.com/leopardracer/status/2118366353396510955",
+                "source": "@leopardracer",
+                "date": "Thu Nov 05 15:34:30 +0000 2026",
+                "metrics": {
+                  "favorites": 2553,
+                  "retweets": 358,
+                  "views": "555407"
+                }
+              },
+              {
+                "title": "I'm gonna uninstall Blender tonight. A dev just dropped a free Claude skill that turns one picture into a 3D machine you",
+                "summary": "I'm gonna uninstall Blender tonight. A dev just dropped a free Claude skill that turns one picture into a 3D machine you can take apart.\n\ni gave it a ChatGPT render and one word, \"octopus\", just to see where it breaks.\n\nit didn't:\n\n> Claude kept the render as a target only and wrote every shell, wheel and lens itself in three.js\n> the eye opens into a 10-blade iris behind a 62 mm light ring\n> the dome on top is 4 mm borosilicate and it lifts off and turns over in the air\n> every arm runs 2 rows of suction wheels down to a spiral tip of 16 links\n> all 8 plug into one hub with 48 teeth and 16 hoses fan out the moment it opens\n> a new part comes loose every 3 seconds until 0:19, when nothing is attached to anything\n\nthe octopus isn't even one of the 3 animals the skill ships with.\n\nthe install line and the job file 👇",
+                "url": "https://x.com/elvar_official/status/2118697979607437530",
+                "source": "@elvar_official",
+                "date": "Fri Nov 06 13:32:16 +0000 2026",
+                "metrics": {
+                  "favorites": 2605,
+                  "retweets": 239,
+                  "views": "239420"
+                }
+              },
+              {
+                "title": "THIS IS ACTUAL F*CKING GOLD",
+                "summary": "THIS IS ACTUAL F*CKING GOLD\n\nAnthropic just shared one of the best tricks for Claude Code.\n\nThe idea: run Sonnet, Haiku and Opus 5.5 together, each one doing only the job it's best at.\n\nOpus-level judgment on every big call, without paying Opus rates for every routine turn.\n\nYou just launch Claude Code like this:\n\nclaude --model sonnet --advisor opus\n\nhere's the split:\n\n→ Sonnet 5.5 runs the session and writes the code\n→ Haiku 5.5 explores files and docs in parallel\n→ Opus 5.5 stays on call as advisor for the big calls\n→ you stop spending Opus on work that doesn't need it\n\nOpus only steps in at three moments:\n\n→ before a plan locks\n→ when the same error shows up twice\n→ before calling it done\n\nSonnet builds. Haiku explores. Opus reviews.\n\nJEV engineering is the same move one layer down: the forks that need no thinker (which file, which tool, retry or stop) go to JEV in milliseconds, and the big models only see the ones that split\n\nthe full tree\n> Sonnet 5.5 runs the main session and edits code\n> search maps the repo on Haiku 5.5\n> grep finds call sites on Haiku 5.5\n> docs pulls the API reference on Haiku 5.5\n> Opus 5.5 on call as advisor, reads the whole transcript when consulted\n> JEV routes micro-forks in milliseconds\n\npaste the tree and this prompt into Claude Code ↓\n\n\"Rebuild my Claude Code setup around this tree:\n1. Run the main session on Sonnet 5.5 with Opus 5.5 as advisor.\n2. Create three read-only Haiku 5.5 subagents: search (maps the repo), grep (finds call sites), docs (pulls the API reference).\n3. Add one rule to CLAUDE.md: consult the advisor before locking a plan, after the same error twice, and before calling a task done.\n4. Route fast deterministic forks (tool choice, path selection, retries) through JEV.\nShow me every change as a diff first. No edits until I say go.\"\n\n↳ https://t.co/bsYb2K5H9G\n\nsave it, you'll use this every single day.",
+                "url": "https://x.com/xsmryze/status/2118087892354449537",
+                "source": "@xsmryze",
+                "date": "Wed Nov 04 21:08:00 +0000 2026",
+                "metrics": {
+                  "favorites": 1303,
+                  "retweets": 112,
+                  "views": "191396"
+                }
+              },
+              {
+                "title": "My roommate hasn't slept since this shit... Claude Code just found a one-person website that made $4,800 in a single day",
+                "summary": "My roommate hasn't slept since this shit... Claude Code just found a one-person website that made $4,800 in a single day. The guy who runs it has 27 followers on X, and he's selling the whole business for $360.\n\nIt finds local businesses with no website, builds each one a site with AI in minutes and writes the pitch for you. A web agency you run alone from a laptop.\n\nThis wasn't a screenshot from some guru. Every dollar was read straight from Stripe on TrustMRR, with the day it landed: $0 for 22 days, then $4,800 on one day. 48 people visited the site that whole month.\n\nHe opened Claude Code on his MacBook, made a folder called steal and told it to pull the 25 fastest-growing businesses on TrustMRR with $1,000 to $20,000 of checked revenue last month. 10 names came back, and 8 never said where their customers come from.\n\nHe started scrolling. A library of AI agent skills went from $27 in August to $12,216 in October, paid every single day. An email app for Mac went from $238 to $23,099 in one month. Then he opened the listing for the $4,800 site: \"375 interested buyers saw this recently.\" People were lining up to buy it while he was still reading.\n\nTiny businesses that make money don't need an audience, so nobody posts about them. Their numbers sit on a public page that almost nobody reads.\n\nClaude Code only runs this while his laptop is awake, so he gave the same job to viktor, an AI employee in his Slack that works from its own computer in the cloud. Every Monday it sends him the new winners and a steal sheet for the best one.\n\nHe copied the website-for-local-shops one that weekend. By Friday four shops had paid him $400 each for sites he never designed. How many people are already copying the same 10 businesses, I don't know.\n\nTo find yours, open Claude Code, make a folder called steal and ask it for the fastest-growing businesses with revenue checked by Stripe. The exact prompt he used is in the first comment, and the full setup for Claude and viktor is in the article below.",
+                "url": "https://x.com/Argona0x/status/2118359815021797831",
+                "source": "@Argona0x",
+                "date": "Thu Nov 05 15:08:31 +0000 2026",
+                "metrics": {
+                  "favorites": 614,
+                  "retweets": 40,
+                  "views": "58423"
+                }
+              },
+              {
+                "title": "I can't f*cking believe Anthropic open-sourced the cheat codes for Claude Code and people are still doing it by hand",
+                "summary": "I can't f*cking believe Anthropic open-sourced the cheat codes for Claude Code and people are still doing it by hand\n\nhere are the cheat codes:\n\n-> skills (by anthropics) https://t.co/CqYECgNZ1z the official skills repo from Anthropic, with clean examples of how a real skill is built\n\n-> claude code action (by anthropics) https://t.co/x0W1gc8En0 mention @claude in any PR or issue and it answers, writes the fix on a new branch and signs its commits\n\n-> claude code security review (by anthropics) https://t.co/OvWeVDQ5rB scans every pull request diff for vulnerabilities and filters out the noisy findings\n\n-> claude agent sdk python (by anthropics) https://t.co/Wa6RgHWlQn run Claude Code from your own Python app, with custom tools and hooks\n\n-> claude cookbooks (by anthropics) https://t.co/V8PgDWZ4EK\nrunnable notebooks for RAG, tool use, classification and structured output\n\npick one, add it to your repo tonight\n\nbookmark it before it gets buried",
+                "url": "https://x.com/rvaniaaaa/status/2118780233021002050",
+                "source": "@rvaniaaaa",
+                "date": "Fri Nov 06 18:59:07 +0000 2026",
+                "metrics": {
+                  "favorites": 511,
+                  "retweets": 58,
+                  "views": "57899"
+                }
+              },
+              {
+                "title": "it’s f*cking insane",
+                "summary": "it’s f*cking insane\nthe scariest thing i found with claude in 2026 was inside my AirPods Max\n\ni bought them second-hand. looked perfect. sounded perfect. connected to my laptop like any other pair\n\nafter writing my article about bugs and hidden cameras, i asked Claude to check every Bluetooth device on my laptop too\n\n6 devices. 5 clean. and then this ↓\n\n\"AirPods Max\":\n→ firmware version that doesn't exist in Apple's release list\n→ secretly registered as a KEYBOARD too, hidden from the menu\n→ microphone open 14 hours a day. no call. no app using it\n\nand 2 days after i first paired them, an app called \"BTAudioSync\" appeared on my laptop. i never installed it\n\nit recorded everything through the headphone mic and uploaded it every night at 3am\n\n5 weeks of my life:\n→ 1,284 audio clips\n→ 63 hours of audio\n→ 41 uploads to a server i'd never heard of\n\nmeetings. calls. me alone in my room\n\nto be clear: this isn't Apple spying on anyone. this pair was tampered with before it ever reached me. a second-hand device can be anything inside\n\nwhat Claude helped me do in one evening:\n→ disconnected and forgot the headphones\n→ removed the app and everything that launched it\n→ blocked the upload server and deleted the clips\n→ set mic access to apps i approve only\n→ reset Bluetooth and re-paired only devices i trust\n→ saved everything as evidence\n\nif you bought headphones, a keyboard or a mouse second-hand, check what it really is before you trust it\n\nthe full step-by-step check is in the article below ↓",
+                "url": "https://x.com/Supriik_/status/2117945579254788121",
+                "source": "@Supriik_",
+                "date": "Wed Nov 04 11:42:30 +0000 2026",
+                "metrics": {
+                  "favorites": 1908,
+                  "retweets": 291,
+                  "views": "425659"
+                }
+              },
+              {
+                "title": "I'm sharing with you one of the best papers I've read on Harness Engineering",
+                "summary": "I'm sharing with you one of the best papers I've read on Harness Engineering\n\nit takes apart Claude Code (Opus 5.5), Codex, Gemini CLI and more, and boils all of them down to one line:\n\nagent = model + harness\n\nwhat you take away:\n> what a harness is, in plain terms\n> how modern coding agents are built under the hood\n> the patterns they all share\n> the direction the whole field is moving\n> a checklist for building your own\n\nthe model collects the applause\nthe harness decides whether the agent actually works\n\nloop and graph engineering come next, and that part lives in my article below",
+                "url": "https://x.com/Mr_Buzzoni/status/2119730968437432423",
+                "source": "@Mr_Buzzoni",
+                "date": "Mon Nov 09 09:57:00 +0000 2026",
+                "metrics": {
+                  "favorites": 1043,
+                  "retweets": 120,
+                  "views": "69481"
+                }
+              },
+              {
+                "title": "I still don't understand why everyone is not using this yet. Thanks to it, a year ago I increased my income to 15,000 do",
+                "summary": "I still don't understand why everyone is not using this yet. Thanks to it, a year ago I increased my income to 15,000 dollars a month\n\nAndrey Karpathy, co-founder of OpenAI, published a simple idea that got 25 million views: stop using AI to write code, use it to build a second brain\n\nYou point Claude Code to a folder, drop any source in there (an article, transcript, PDF) and Claude reads it, links it, and saves it into a living wiki of everything you know. It compounds like interest: the more you feed it, the smarter it gets\n\nHere is the gist:\n\nInstall Obsidian, create a vault, open it in Claude Code\n\nPaste the file with Karpathy's wiki idea and tell Claude to build it\n\nClaude creates three folders: raw for sources, wiki for its pages, CLAUDE\nwhich runs everything\n\nDrop any source into raw and say ingest this\n\nAsk questions across everything, forever\n\n5 minutes to set up, and you never start with an empty chat again\n\nThe full instructions can be found in the article below",
+                "url": "https://x.com/Bober_smart/status/2119070145284841481",
+                "source": "@Bober_smart",
+                "date": "Sat Nov 07 14:11:07 +0000 2026",
+                "metrics": {
+                  "favorites": 1178,
+                  "retweets": 127,
+                  "views": "95345"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

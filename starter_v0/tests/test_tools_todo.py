@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import pytest
 
+import requests
+
 from conftest import FakeResponse  # noqa: F401  (you will need it)
 from tools import TOOL_FUNCTIONS  # noqa: F401
 
@@ -120,3 +122,62 @@ def test_my_new_tool_bad_input_from_model() -> None:
 
 def test_my_new_tool_failure_returns_error_dict() -> None:
     pytest.skip(TODO)
+
+
+# ---------------- wiki ----------------
+wiki = TOOL_FUNCTIONS["wiki"]
+
+
+def test_wiki_happy_path_builds_url_and_maps_summary(fake_http) -> None:
+    calls = fake_http(FakeResponse({
+        "title": "Large language model",
+        "extract": "A large language model is ...",
+        "content_urls": {"desktop": {"page": "https://en.wikipedia.org/wiki/Large_language_model"}},
+    }))
+    result = wiki(title="Large language model")
+
+    # request gửi đi
+    assert calls[0]["method"] == "GET"
+    assert calls[0]["url"] == "https://en.wikipedia.org/api/rest_v1/page/summary/Large_language_model"
+    assert "User-Agent" in calls[0]["headers"]
+    # kết quả trả về
+    assert result == {
+        "tool": "wiki", "status": "ok", "title": "Large language model",
+        "summary": "A large language model is ...",
+        "url": "https://en.wikipedia.org/wiki/Large_language_model",
+    }
+
+
+def test_wiki_empty_title_returns_error_without_request(fake_http) -> None:
+    calls = fake_http(FakeResponse({}))
+    result = wiki(title="   ")
+    assert result["error"] == "ValueError"
+    assert calls == []
+
+
+def test_wiki_out_of_enum_lang_falls_back_to_en(fake_http) -> None:
+    calls = fake_http(FakeResponse({"title": "X", "extract": "y"}))
+    wiki(title="X", lang="fr")
+    assert calls[0]["url"].startswith("https://en.wikipedia.org/")
+
+
+def test_wiki_404_returns_not_found(fake_http) -> None:
+    fake_http(FakeResponse(status_code=404))
+    assert wiki(title="No such page")["status"] == "not_found"
+
+
+def test_wiki_http_error_returns_error_dict(fake_http) -> None:
+    fake_http(FakeResponse(status_code=500))
+    assert wiki(title="X")["error"] == "HTTPError"
+
+
+def test_wiki_timeout_returns_error_dict(fake_http) -> None:
+    fake_http(requests.Timeout("timed out"))
+    result = wiki(title="X")
+    assert result["error"] == "Timeout"
+
+def test_wiki_non_string_title_does_not_raise(fake_http) -> None:
+    calls = fake_http(FakeResponse({"title": "123", "extract": ""}))
+    result = wiki(title=123)
+    assert calls[0]["url"].endswith("/page/summary/123")
+    assert result["status"] == "ok"

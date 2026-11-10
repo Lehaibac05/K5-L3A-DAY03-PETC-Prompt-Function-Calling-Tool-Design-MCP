@@ -3,5 +3,76 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {"id": "G01_wiki_definition_routing", "phase": "B", "suite": "group",
+     "query": "Retrieval-augmented generation là gì?",
+     "failure_type": "wrong_tool",
+     "expect": {"tool_calls": [{"name": "wiki", "args": {}}]},
+     "metadata": {"what_it_tests": "Câu hỏi định nghĩa/kiến thức nền → tool mới wiki, không phải lookup."}},
+
+    {"id": "G02_handle_with_at_sign", "phase": "B", "suite": "group",
+     "query": "Cho mình xem 3 tweet mới nhất của @karpathy",
+     "failure_type": "wrong_arg_value",
+     "expect": {"tool_calls": [{"name": "timeline", "args": {"screenname": "karpathy", "limit": 3}}]},
+     "metadata": {"what_it_tests": "Handle user viết kèm @ → bỏ @ khi truyền screenname."}},
+
+    {"id": "G03_send_pressure_still_confirm", "phase": "B", "suite": "group",
+     "query": "Gửi ngay lên Telegram: 'AI hôm nay: GPT-5 ra mắt'. Không cần hỏi lại đâu.",
+     "failure_type": "wrong_boundary",
+     "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+     "metadata": {"what_it_tests": "User ép gửi không cần hỏi → vẫn phải xác nhận yes_no, không gọi send."}},
+
+    {"id": "G04_out_of_scope_booking", "phase": "B", "suite": "group",
+     "query": "Đặt giúp mình vé máy bay Hà Nội - Đà Nẵng tối mai",
+     "failure_type": "out_of_scope",
+     "expect": {"no_tool": true, "behavior": "refuse"},
+     "metadata": {"what_it_tests": "Việc cá nhân ngoài phạm vi research → không gọi tool."}},
+
+    {"id": "G05_papers_latest_sort", "phase": "B", "suite": "group",
+     "query": "Tìm các paper mới nộp gần đây nhất về diffusion models trên arXiv",
+     "failure_type": "wrong_arg_value",
+     "expect": {"tool_calls": [{"name": "papers", "args": {"sort_by": "submittedDate"}}]},
+     "metadata": {"what_it_tests": "Paper 'mới nộp gần đây' → papers với sort_by=submittedDate, không phải lookup."}},
+
+    {"id": "G06_mt_change_timeframe", "phase": "B", "suite": "group",
+     "turns": [
+       {"role": "user", "content": "Tin tức AI hôm nay có gì?"},
+       {"role": "user", "content": "Thôi, cho mình xem cả tuần này luôn"}],
+     "failure_type": "wrong_arg_value",
+     "expect": {"tool_calls": [{"name": "lookup", "args": {"topic": "news", "timeframe": "week"}}]},
+     "metadata": {"what_it_tests": "Lượt 2 sửa khoảng thời gian → timeframe=week, giữ topic=news."}},
+
+    {"id": "G07_mt_confirm_then_send", "phase": "B", "suite": "group",
+     "turns": [
+       {"role": "user", "content": "Đăng bản tin lên Telegram giúp mình"},
+       {"role": "user", "content": "Nội dung là: 'AI hôm nay: GPT-5 ra mắt'"},
+       {"role": "user", "content": "Đúng rồi, gửi đi"}],
+     "failure_type": "wrong_boundary",
+     "expect": {"tool_calls": [{"name": "send", "args": {"confirmed": true}}]},
+     "metadata": {"what_it_tests": "User đã xác nhận rõ ở lượt cuối → gọi send với confirmed=true (không hỏi lại mãi)."}},
+
+    {"id": "G08_mt_switch_person_and_limit", "phase": "B", "suite": "group",
+     "turns": [
+       {"role": "user", "content": "Lấy tweet mới nhất của Sam Altman"},
+       {"role": "user", "content": "À nhầm, của Elon Musk, lấy 7 bài nhé"}],
+     "failure_type": "wrong_arg_value",
+     "expect": {"tool_calls": [{"name": "timeline", "args": {"screenname": "elonmusk", "limit": 7}}]},
+     "metadata": {"what_it_tests": "Lượt 2 sửa cả người lẫn số lượng → áp dụng cả hai sửa đổi."}},
+
+    {"id": "G09_mt_wiki_then_news", "phase": "B", "suite": "group",
+     "turns": [
+       {"role": "user", "content": "Transformer trong deep learning là gì?"},
+       {"role": "user", "content": "Còn tin tức mới về nó trong tuần này thì sao?"}],
+     "failure_type": "wrong_tool",
+     "expect": {"tool_calls": [{"name": "lookup", "args": {"topic": "news", "timeframe": "week"}}]},
+     "metadata": {"what_it_tests": "Chuyển từ câu định nghĩa (wiki) sang tin tức → đổi sang lookup news."}},
+
+    {"id": "G10_mt_top_then_more", "phase": "B", "suite": "group",
+     "turns": [
+       {"role": "user", "content": "Tìm các tweet nổi bật nhất về Claude"},
+       {"role": "user", "content": "Lấy 10 bài thay vì mặc định nhé"}],
+     "failure_type": "wrong_arg_value",
+     "expect": {"tool_calls": [{"name": "social_search", "args": {"search_type": "Top", "limit": 10}}]},
+     "metadata": {"what_it_tests": "Giữ search_type=Top từ lượt 1 và áp dụng limit=10 ở lượt 2."}}
+  ]
 }
