@@ -9,12 +9,19 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 import pytest
 import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    # Avoid sharing Windows temp directories across different execution users.
+    if config.option.basetemp is None:
+        config.option.basetemp = str(ROOT / f".pytest-tmp-{uuid4().hex}")
 
 API_ENV_VARS = [
     "TAVILY_API_KEY", "FIRECRAWL_API_KEY", "RAPIDAPI_KEY", "RAPIDAPI_TWITTER_HOST",

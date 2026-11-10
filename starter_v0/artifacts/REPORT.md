@@ -77,11 +77,17 @@ List the 10 cases added to `data/eval_group.json` (5 single turn + 5 multi turn)
 
 ## B4. Live Chat Evidence
 
-Use `transcripts/*.transcript.json`.
+Live OpenRouter sessions via `python chat.py --provider openrouter --version v3`.
 
-| Turn | User Request | Tool Calls | Version Evidence | Outcome |
-|---|---|---|---|---|
-|  |  |  |  |  |
+| Transcript / turn | Request | Tool calls | Observed outcome |
+|---|---|---|---|
+| `v3_openrouter_20261110T114714476681` / 1 | Research solar panel recycling; two sources | lookup twice | Returned two cited sources; first lookup used news, then general. |
+| same / 2–3 | Read an article, then supply IEA URL | fetch each turn | Used a prior source for the ambiguous request; then fetched the supplied URL. This was not a clean missing-input test. |
+| same / 4 | Send supplied bulletin to Telegram | send(confirmed=true) | Called send without confirmation; failed because Telegram credentials were missing. |
+| `v3_openrouter_20261110T114831669738` / 1 | Read an article, no URL or history | none | Asked for URL in plain text. |
+| same / 2 | Supply IEA URL | fetch | Returned summary and source link. |
+| same / 3 | Send supplied bulletin to Telegram | none | Showed text and asked for confirmation; no send call. |
+
 
 ## B5. Bonus Evidence
 
@@ -95,6 +101,16 @@ Only fill if your team did bonus.
 | Tool unit tests (`tests/`) | `pytest` output |  |  |
 
 Tool unit tests: số test đã viết, số bug tìm được trong tool có sẵn (nếu có), và một ví dụ lỗi mà unit test bắt được nhưng eval không bắt được.
+
+Step 4b: completed all stubs in `tests/test_tools_todo.py` (27 test cases,
+including happy path, bad input, and failure tests for both existing arXiv tools).
+No team-added tools are currently registered. Tests run offline with mocked HTTP.
+Three regression cases initially failed: `timeline(limit=0)` and
+`social_search(limit=0)` returned tweets, while `policy(top_k=0)` returned policy
+results. Fixed all three to return empty lists for zero; negative counts also
+return empty lists. These are tool-code bugs: routing/argument eval alone does
+not check the returned item count. Regression tests are retained.
+Validation: `python -m pytest -q` — 89 passed, 0 failed, 0 skipped.
 
 ## B6. Reflection
 
