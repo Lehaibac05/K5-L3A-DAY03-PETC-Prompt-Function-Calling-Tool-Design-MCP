@@ -3,5 +3,106 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_source_check_urls",
+      "phase": "B",
+      "query": "Kiểm tra giúp mình hai nguồn https://openai.com/research/#overview và http://example.com trước khi làm digest.",
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"urls": ["https://openai.com/research/#overview", "http://example.com"]}}]},
+      "metadata": {"what_it_tests": "Routes URL validation to the local source_check tool instead of fetching content."}
+    },
+    {
+      "id": "G02_source_check_no_network",
+      "phase": "B",
+      "query": "Lọc link trùng trong https://example.com/a và https://example.com/a#section, chỉ nhận HTTPS.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "source_check", "args": {"require_https": true}}]},
+      "metadata": {"what_it_tests": "Deduplicating/checking sources uses source_check, not fetch or lookup."}
+    },
+    {
+      "id": "G03_policy_privacy",
+      "phase": "B",
+      "query": "Chính sách nội bộ nói gì về quyền riêng tư dữ liệu?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "policy", "args": {"query": "quyền riêng tư dữ liệu", "policy_area": "data_privacy"}}]},
+      "metadata": {"what_it_tests": "Routes internal-policy questions to the local policy knowledge base."}
+    },
+    {
+      "id": "G04_paper_search",
+      "phase": "B",
+      "query": "Tìm 3 paper arXiv mới nhất về AI agent evaluation.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "papers", "args": {"query": "AI agent evaluation", "max_results": 3, "sort_by": "lastUpdatedDate"}}]},
+      "metadata": {"what_it_tests": "Uses papers with the requested result count and recency sort."}
+    },
+    {
+      "id": "G05_no_tool_math",
+      "phase": "B",
+      "query": "2 + 2 bằng mấy?",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true},
+      "metadata": {"what_it_tests": "Simple non-research requests should not trigger a tool."}
+    },
+    {
+      "id": "G06_multiturn_url_after_clarify",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tóm tắt bài này giúp mình."},
+        {"role": "assistant", "content": "Bạn gửi URL bài viết nhé."},
+        {"role": "user", "content": "Đây: https://openai.com/research/. Chỉ đọc link này."}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "fetch", "args": {"url": "https://openai.com/research/"}}]},
+      "metadata": {"what_it_tests": "Carries clarification context and fetches the supplied URL."}
+    },
+    {
+      "id": "G07_multiturn_latest_limit",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Lấy 8 tweet mới nhất của Elon Musk."},
+        {"role": "assistant", "content": "Mình sẽ lấy các tweet đó."},
+        {"role": "user", "content": "Đổi thành 2 thôi."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "timeline", "args": {"screenname": "elonmusk", "limit": 2}}]},
+      "metadata": {"what_it_tests": "The newest quantity replaces an earlier value."}
+    },
+    {
+      "id": "G08_multiturn_switch_to_social",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tin về OpenAI hôm nay thế nào?"},
+        {"role": "assistant", "content": "Mình sẽ tìm tin web."},
+        {"role": "user", "content": "Thôi, xem mọi người bàn gì trên X về OpenAI đi."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "social_search", "args": {"query": "OpenAI", "search_type": "Latest"}}]},
+      "metadata": {"what_it_tests": "The latest request switches the source from web news to X discussion."}
+    },
+    {
+      "id": "G09_multiturn_confirm_send",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Gửi bản tin AI này lên Telegram."},
+        {"role": "assistant", "content": "Bạn có xác nhận gửi không?"},
+        {"role": "user", "content": "Có, tôi xác nhận gửi đúng nội dung trên."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "send", "args": {"confirmed": true}}]},
+      "metadata": {"what_it_tests": "A clear later confirmation permits the action tool."}
+    },
+    {
+      "id": "G10_multiturn_paper_text",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tìm paper về Transformer."},
+        {"role": "assistant", "content": "Mình đã tìm được các paper phù hợp."},
+        {"role": "user", "content": "Đọc 2 trang đầu của paper arXiv 1706.03762."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "paper_text", "args": {"arxiv_url": "1706.03762", "max_pages": 2}}]},
+      "metadata": {"what_it_tests": "Routes a supplied arXiv identifier to paper_text with page count."}
+    }
+  ]
 }
